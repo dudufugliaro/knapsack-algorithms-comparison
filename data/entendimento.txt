@@ -1,0 +1,11 @@
+#para cada quantidade n de itens e uma mochila que suporta W kg
+    - gerar 10 instâncias (valores e pesos aleatórios)
+    - pesos entre 1 e n/4
+    - valores entre 1 e 1000
+
+#para cada instância
+    - executar os 3 algoritmos
+    - medir o tempo de execução
+
+#fazer o teste probabilístico t com 95% de confiança
+    - verificar se houve empate estatístico
