@@ -3,5 +3,5 @@
 
 void readFileKnapSack(const char*, int*, int**, int**, int*);
 void gerarArquivoMochila(const char*, int, int, int, int, int, int);
-
+double timestamp(void);
 #endif
