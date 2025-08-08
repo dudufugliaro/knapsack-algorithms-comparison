@@ -3,6 +3,9 @@
 #include <time.h>
 #include "utils.h"
 
+#ifdef _WIN32
+#include <windows.h>
+#endif
 
 void readFileKnapSack(const char* nome_arquivo, int* capacidade, int** valores, int** pesos, int* n) {
 
@@ -68,4 +71,28 @@ void gerarArquivoMochila(const char* nome_arquivo, int n, int capacidade, int mi
 
     fclose(file);
     printf("Arquivo '%s' gerado com sucesso!\n", nome_arquivo);
+}
+
+double timestamp(void) {
+#ifdef _WIN32
+    /* Implementação para Windows */
+    LARGE_INTEGER frequency, counter;
+    QueryPerformanceFrequency(&frequency);
+    QueryPerformanceCounter(&counter);
+    return (double)counter.QuadPart / frequency.QuadPart;
+#else
+    /* Implementação para Linux/macOS (mantida para referência) */
+    struct timespec tp;
+    #ifdef __MACH__ // macOS
+    clock_serv_t cclock;
+    mach_timespec_t mts;
+    host_get_clock_service(mach_host_self(), CALENDAR_CLOCK, &cclock);
+    clock_get_time(cclock, &mts);
+    mach_port_deallocate(mach_task_self(), cclock);
+    return (double)mts.tv_sec + (double)mts.tv_nsec / 1.0e9;
+    #else // Linux
+    clock_gettime(CLOCK_MONOTONIC, &tp);
+    return (double)tp.tv_sec + (double)tp.tv_nsec / 1.0e9;
+    #endif
+#endif
 }
