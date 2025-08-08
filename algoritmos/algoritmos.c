@@ -1,6 +1,7 @@
 #include "algoritmos.h"
 #include <stdio.h>
 #include <time.h>
+#include <stdlib.h>
 
 int knapsack_dinamica(int W, int w[], int v[], int n,double* tempo_execucao) {
 
@@ -56,3 +57,40 @@ int knapsack_dinamica(int W, int w[], int v[], int n,double* tempo_execucao) {
 
     return dp[n][W];  
 }
+
+/* ======================== BACKTRACKING ======================== */
+
+void bt_recursivo(int capacidade, int pesos[], int valores[], int n, int index, 
+                 int valor_atual, int peso_atual, int *melhor_valor) {
+    // Caso base: chegou ao final dos itens
+    if (index == n) {
+        if (peso_atual <= capacidade && valor_atual > *melhor_valor) {
+            *melhor_valor = valor_atual;
+        }
+        return;
+    }
+    
+    // Inclui o item atual (se couber)
+    if (peso_atual + pesos[index] <= capacidade) {
+        bt_recursivo(capacidade, pesos, valores, n, index + 1,
+                    valor_atual + valores[index],
+                    peso_atual + pesos[index],
+                    melhor_valor);
+    }
+    
+    // Exclui o item atual
+    bt_recursivo(capacidade, pesos, valores, n, index + 1,
+                valor_atual, peso_atual, melhor_valor);
+}
+
+int knapsack_backtracking(int capacidade, int pesos[], int valores[], int n, double* tempo_execucao) {
+    clock_t inicio = clock();
+    int melhor_valor = 0;
+    
+    bt_recursivo(capacidade, pesos, valores, n, 0, 0, 0, &melhor_valor);
+    
+    clock_t fim = clock();
+    *tempo_execucao = ((double)(fim - inicio)) / CLOCKS_PER_SEC;
+    return melhor_valor;
+}
+

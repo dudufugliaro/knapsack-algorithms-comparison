@@ -11,7 +11,8 @@ int main(int*argc, char**argv) {
     int n;
     double tempo_execucao;
 
-    readFileKnapSack("data/n=100&W=100/mochila_100_100_1.txt", &capacidade, &valores, &pesos, &n);
+    readFileKnapSack("data/test.txt", &capacidade, &valores, &pesos, &n);
+    
 
     printf("Capacidade da mochila: %d\n", capacidade);
 
@@ -22,8 +23,8 @@ int main(int*argc, char**argv) {
         printf("Solução ótima com programação dinâmica : %d\n", solucao_otima);
         printf("Tempo de execução com programação dinâmica : %f (s)\n", tempo_execucao);
     }
-    else if(strcmp(argv[1],"2")){
-        int solucao_otima = 0;
+    else if(strcmp(argv[1],"2")== 0){
+        int solucao_otima = knapsack_backtracking(capacidade, valores, pesos, n, &tempo_execucao);
         printf("Solução ótima com backtracking : %d\n", solucao_otima);
         printf("Tempo de execução com backtracking : %f (s)\n", tempo_execucao);
     }
