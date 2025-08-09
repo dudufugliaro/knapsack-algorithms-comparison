@@ -3,6 +3,9 @@
 #include <string.h>
 #include <time.h>
 #include "utils/utils.h"
+#include "algoritmos/algoritmos.h"
+
+// gcc algoritmos.o queue.o utils.o main.o -o exe
 
 int main(int argc, char **argv) {
     if (argc != 3) {
@@ -24,24 +27,20 @@ int main(int argc, char **argv) {
 
     printf("Capacidade da mochila: %d\n", capacidade);
     printf("Quantidade de itens: %d\n", n);
-
-    double start_time = timestamp();
     
     int solucao_otima = -1;
     if (strcmp(argv[1], "1") == 0) {
-        solucao_otima = knapsack_dinamica(capacidade, valores, pesos, n);
+        solucao_otima = knapsack_dinamica(capacidade, valores, pesos, n, &tempo_execucao);
     } else if (strcmp(argv[1], "2") == 0) {
-        solucao_otima = knapsack_backtracking(capacidade, valores, pesos, n);
-    /*} else if (strcmp(argv[1], "3") == 0) {
-        solucao_otima = knapsack_branch_and_bound(capacidade, valores, pesos, n);*/
+        solucao_otima = knapsack_backtracking(capacidade, valores, pesos, n,&tempo_execucao);
+    } else if (strcmp(argv[1], "3") == 0) {
+        solucao_otima = knapsack_bnb(capacidade, valores, pesos, n, &tempo_execucao);
     } else {
         printf("Algoritmo inválido!\n");
         free(valores);
         free(pesos);
         return 1;
     }
-
-    tempo_execucao = timestamp() - start_time;
 
     printf("Solução ótima: %d\n", solucao_otima);
     printf("Tempo de execução: %.6f segundos\n", tempo_execucao);

@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h> 
 #include <stdbool.h>
+#include "ed/queue.h"
 
 
 int knapsack_dinamica(int W, int w[], int v[], int n,double* tempo_execucao) {
