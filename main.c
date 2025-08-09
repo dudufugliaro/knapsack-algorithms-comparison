@@ -1,39 +1,50 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "./utils/utils.h"
-#include "./algoritmos/algoritmos.h"
 #include <string.h>
+#include <time.h>
+#include "utils/utils.h"
 
-int main(int argc, char**argv) {
+int main(int argc, char **argv) {
+    if (argc != 3) {
+        printf("Uso: %s <algoritmo> <arquivo_entrada>\n", argv[0]);
+        printf("Algoritmos:\n");
+        printf("1 - Programação Dinâmica\n");
+        printf("2 - Backtracking\n");
+        printf("3 - Branch-and-Bound\n");
+        return 1;
+    }
+
     int capacidade;
-    int* valores = NULL;
-    int* pesos = NULL;
+    int *valores = NULL;
+    int *pesos = NULL;
     int n;
     double tempo_execucao;
 
-    //readFileKnapSack("data/test.txt", &capacidade, &valores, &pesos, &n);
-    readFileKnapSack("data/test.txt",&capacidade,&valores,&pesos,&n);
+    readFileKnapSack(argv[2], &capacidade, &valores, &pesos, &n);
 
     printf("Capacidade da mochila: %d\n", capacidade);
+    printf("Quantidade de itens: %d\n", n);
 
-    int solucao_otima = -1;
+    double start_time = timestamp();
     
-    if(strcmp(argv[1],"1") == 0){
-        solucao_otima = knapsack_dinamica(capacidade,valores,pesos,n,&tempo_execucao);
-        printf("Solução ótima com programação dinamica : %d\n", solucao_otima);
-        printf("Tempo de execução com programação dinâmica : %f (s)\n", tempo_execucao);
+    int solucao_otima = -1;
+    if (strcmp(argv[1], "1") == 0) {
+        solucao_otima = knapsack_dinamica(capacidade, valores, pesos, n);
+    } else if (strcmp(argv[1], "2") == 0) {
+        solucao_otima = knapsack_backtracking(capacidade, valores, pesos, n);
+    /*} else if (strcmp(argv[1], "3") == 0) {
+        solucao_otima = knapsack_branch_and_bound(capacidade, valores, pesos, n);*/
+    } else {
+        printf("Algoritmo inválido!\n");
+        free(valores);
+        free(pesos);
+        return 1;
     }
-    else if(strcmp(argv[1],"2")== 0){
-        int solucao_otima = knapsack_backtracking(capacidade, valores, pesos, n, &tempo_execucao);
-        printf("Solução ótima com backtracking : %d\n", solucao_otima);
-        printf("Tempo de execução com backtracking : %f (s)\n", tempo_execucao);
-    }
-    else{
-        printf("Metodo Branch and Bound selecionado\n");
-        int solucao_otima = knapsack_bnb(capacidade,valores,pesos,n,&tempo_execucao);
-        printf("Solução ótima com branch-and-bound : %d\n", solucao_otima);
-        printf("Tempo de execução com branch-and-bound : %f (s)\n", tempo_execucao);
-    }
+
+    tempo_execucao = timestamp() - start_time;
+
+    printf("Solução ótima: %d\n", solucao_otima);
+    printf("Tempo de execução: %.6f segundos\n", tempo_execucao);
 
     free(valores);
     free(pesos);
