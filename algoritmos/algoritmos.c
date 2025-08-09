@@ -63,37 +63,61 @@ int knapsack_dinamica(int W, int w[], int v[], int n,double* tempo_execucao) {
 
 /* ======================== BACKTRACKING ======================== */
 
-void bt_recursivo(int capacidade, int pesos[], int valores[], int n, int index, 
-                 int valor_atual, int peso_atual, int *melhor_valor) {
+void bt_recursivo(int capacidade, int pesos[], int valores[], int n, int index,
+                  int valor_atual, int peso_atual, int *melhor_valor,
+                  int itens_atual[], int melhores_itens[]) {
     // Caso base: chegou ao final dos itens
     if (index == n) {
         if (peso_atual <= capacidade && valor_atual > *melhor_valor) {
             *melhor_valor = valor_atual;
+            // Salva a combinação de itens da melhor solução
+            for (int i = 0; i < n; i++) {
+                melhores_itens[i] = itens_atual[i];
+            }
         }
         return;
     }
-    
+
     // Inclui o item atual (se couber)
     if (peso_atual + pesos[index] <= capacidade) {
+        itens_atual[index] = 1; // marca como incluído
         bt_recursivo(capacidade, pesos, valores, n, index + 1,
-                    valor_atual + valores[index],
-                    peso_atual + pesos[index],
-                    melhor_valor);
+                     valor_atual + valores[index],
+                     peso_atual + pesos[index],
+                     melhor_valor, itens_atual, melhores_itens);
     }
-    
+
     // Exclui o item atual
+    itens_atual[index] = 0; // marca como não incluído
     bt_recursivo(capacidade, pesos, valores, n, index + 1,
-                valor_atual, peso_atual, melhor_valor);
+                 valor_atual, peso_atual,
+                 melhor_valor, itens_atual, melhores_itens);
 }
 
 int knapsack_backtracking(int capacidade, int pesos[], int valores[], int n, double* tempo_execucao) {
     clock_t inicio = clock();
     int melhor_valor = 0;
-    
-    bt_recursivo(capacidade, pesos, valores, n, 0, 0, 0, &melhor_valor);
-    
+
+    int itens_atual[n];
+    int melhores_itens[n];
+    for (int i = 0; i < n; i++) {
+        itens_atual[i] = 0;
+        melhores_itens[i] = 0;
+    }
+
+    bt_recursivo(capacidade, pesos, valores, n, 0, 0, 0, &melhor_valor, itens_atual, melhores_itens);
+
     clock_t fim = clock();
     *tempo_execucao = ((double)(fim - inicio)) / CLOCKS_PER_SEC;
+
+    printf("Itens escolhidos (índices 0-based): ");
+    for (int i = 0; i < n; i++) {
+        if (melhores_itens[i]) {
+            printf("%d ", i);
+        }
+    }
+    printf("\n");
+
     return melhor_valor;
 }
 
