@@ -10,6 +10,7 @@
 typedef struct {
     int peso;
     int valor;
+    int i;
 } Item;
 
 // Estrutura do nó para a fila de prioridade
